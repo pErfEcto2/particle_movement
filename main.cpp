@@ -30,6 +30,8 @@ int main() {
     std::vector<sf::Text> texts;
     texts.push_back(textInit(sf::Text(), font, 20, sf::Vector2f(10, 10)));
     texts.push_back(textInit(sf::Text(), font, 20, sf::Vector2f(10, 30)));
+    texts.push_back(textInit(sf::Text(), font, 20, sf::Vector2f(10, 50)));
+    texts.push_back(textInit(sf::Text(), font, 20, sf::Vector2f(10, 70)));
     texts.push_back(textInit(sf::Text(), font, 20, sf::Vector2f(1200, 10)));
 
     FPS fps;
@@ -37,11 +39,20 @@ int main() {
     int R = 2;
     int A = 30;
     int B = 1;
-    sf::Vector2f pos = getScreenSize() / 2;
+    sf::Vector2f screenSize = getScreenSize();
 
-    Particle part(pos, sf::Color::White, R, A, B);
+    Particle part(screenSize / 2, sf::Color::White, R, A, B);
 
     sf::Keyboard keyboard;
+
+    sf::Vertex horizontal[2];
+    sf::Vertex vertical[2];
+
+    horizontal[0].position = sf::Vector2f(0, screenSize.y / 2);
+    horizontal[1].position = sf::Vector2f(screenSize.x, screenSize.y / 2);
+    vertical[0].position = sf::Vector2f(screenSize.x / 2, 0);
+    vertical[1].position = sf::Vector2f(screenSize.x / 2, screenSize.y);
+
 
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
@@ -56,7 +67,8 @@ int main() {
                 if (keyboard.isKeyPressed(sf::Keyboard::R)) {
                     part.A = A;
                     part.B = B;
-                    part.pos = pos;
+                    part.pos = getScreenSize() / 2;
+                    part.t = 0;
                     window.clear();
                 }
             }
@@ -76,13 +88,18 @@ int main() {
 
         texts[0].setString("A: " + std::to_string(part.A));
         texts[1].setString("B: " + std::to_string(part.B));
-        texts[2].setString("FPS: " + std::to_string(fps.getFPS()));
+        texts[2].setString("X pos: " + std::to_string(part.pos.x));
+        texts[3].setString("Y pos: " + std::to_string(part.pos.y));
+        texts[4].setString("FPS: " + std::to_string(fps.getFPS()));
 
         if (keys["clear"]) window.clear();
 
         for (sf::Text &text: texts) {
             window.draw(text);
         }
+
+        window.draw(horizontal, 2, sf::Lines);
+        window.draw(vertical, 2, sf::Lines);
 
         part.draw(window);
 

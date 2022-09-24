@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "SFML/Window.hpp"
 #include "SFML/Graphics.hpp"
 #include "math.h"
@@ -20,13 +19,13 @@ class Particle {
     private:
         sf::CircleShape circle;
         sf::Color color;
-        float t;
+        sf::Vector2f screenSize;
     
     public:
         sf::Vector2f pos;
         sf::Vector2f vel;
         int radius;
-        float A, B;
+        float A, B, t;
         Particle(sf::Vector2f p, sf::Color c, int r, float a, float b);
         void draw(sf::RenderWindow &w);
         float xCoord(float time);

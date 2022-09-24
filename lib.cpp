@@ -2,11 +2,16 @@
 #include "SFML/Graphics.hpp"
 #include "math.h"
 #include "lib.hpp"
+#include "iostream"
 
 
 //---------------------------OPERATORS-----------------------------------------
 sf::Vector2f operator/(sf::Vector2f const &v, int const &n) {
     return sf::Vector2f(v.x / n, v.y / n);
+}
+
+sf::Vector2f operator%(sf::Vector2f const &v1, sf::Vector2f const &v2) {
+    return sf::Vector2f(std::fmod(v1.x, v2.x), std::fmod(v1.y, v2.y));
 }
 
 //------------------------------------FUNCTIONS------------------------------------
@@ -39,9 +44,9 @@ Particle::Particle(sf::Vector2f p, sf::Color c, int r, float a, float b) {
     B = b;
     vel = sf::Vector2f(0, 0);
     circle.setRadius(radius);
-    circle.setPosition(pos);
     circle.setFillColor(color);
     circle.setOrigin(radius / 2, radius / 2);
+    screenSize = getScreenSize();
 }
 
 void Particle::draw(sf::RenderWindow &w) {
@@ -49,20 +54,19 @@ void Particle::draw(sf::RenderWindow &w) {
 }
 
 float Particle::xCoord(float time) {
-    return A * std::sin(B * time);
+    return A * time;
 }
 
 float Particle::yCoord(float time) {
-    return A * std::sin(B * time);
+    return A * std::tan(B * time);
 }
 
 void Particle::update() {
-    pos += vel;
     circle.setPosition(pos);
 
-    pos = sf::Vector2f(xCoord(t), yCoord(t)) + (getScreenSize() / 2);
+    pos = (sf::Vector2f(xCoord(t), yCoord(t)) + (screenSize / 2)) % screenSize;
 
-    if (A != 0 && B != 0) t += 0.1;
+    t += 0.1;
 }
 
 
