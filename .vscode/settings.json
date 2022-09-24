@@ -1,0 +1,12 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/projects/cpp/particle_movement",
+            "binaryPath": "/home/projects/cpp/particle_movement/main",
+            "binaryArgs": []
+        }
+    ],
+    "files.associations": {
+        "iostream": "cpp"
+    }
+}
