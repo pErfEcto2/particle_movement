@@ -58,7 +58,7 @@ float Particle::xCoord(float time) {
 }
 
 float Particle::yCoord(float time) {
-    return A * std::tan(B * time);
+    return A * std::sin(B * time);
 }
 
 void Particle::update() {

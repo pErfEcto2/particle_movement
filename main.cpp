@@ -23,7 +23,10 @@ int main() {
     }
 
     std::map<std::string, bool> keys = {
-        {"clear", true}
+        {"clear", true},
+        {"stop", false},
+        {"increase", false},
+        {"decrease", false}
     };
 
     // initialize all texts
@@ -37,7 +40,7 @@ int main() {
     FPS fps;
 
     int R = 2;
-    int A = 30;
+    int A = 10;
     int B = 1;
     sf::Vector2f screenSize = getScreenSize();
 
@@ -62,15 +65,24 @@ int main() {
                     exit(0);
                 }
 
-                if (keyboard.isKeyPressed(sf::Keyboard::C)) keys["clear"] = !keys["clear"];
-
                 if (keyboard.isKeyPressed(sf::Keyboard::R)) {
-                    part.A = A;
-                    part.B = B;
                     part.pos = getScreenSize() / 2;
                     part.t = 0;
                     window.clear();
+                    if (keyboard.isKeyPressed(sf::Keyboard::LControl)) {
+                        part.A = A;
+                        part.B = B;
+                    }
                 }
+
+                if (keyboard.isKeyPressed(sf::Keyboard::C)) keys["clear"] = !keys["clear"];
+                if (keyboard.isKeyPressed(sf::Keyboard::Space)) keys["stop"] = !keys["stop"];
+                if (keyboard.isKeyPressed(sf::Keyboard::I)) keys["increase"] = true;
+                if (keyboard.isKeyPressed(sf::Keyboard::D)) keys["decrease"] = true;
+            }
+            else if (event.type == sf::Event::KeyReleased) {
+                if (event.key.code == sf::Keyboard::I) keys["increase"] = false;
+                if (event.key.code == sf::Keyboard::D) keys["decrease"] = false;
             }
 
             if (event.type == sf::Event::MouseWheelScrolled) {
@@ -84,7 +96,17 @@ int main() {
             }
         }
 
-        part.update();
+        if (!keys["stop"]) part.update();
+
+        if (keys["increase"]) {
+            part.A += 0.1;
+            part.B += 0.005;
+        }
+        
+        if (keys["decrease"]) {
+            part.A -= 0.1;
+            part.B -= 0.005;
+        }
 
         texts[0].setString("A: " + std::to_string(part.A));
         texts[1].setString("B: " + std::to_string(part.B));
